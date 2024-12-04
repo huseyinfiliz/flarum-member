@@ -1,4 +1,4 @@
-name: Build and Zip
+name: Build
 
 on:
   push:
@@ -19,25 +19,11 @@ jobs:
           node-version: '16'
 
       # Doğru dizine geçiş yapın (js klasörü)
-      - name: Change to js directory
-        run: cd js
 
       # Bağımlılıkları yükleyin ve projeyi derleyin
       - name: Install dependencies and build
         run: |
           npm install
-          npm run build
-
-      # Zipleme işlemi ve artifact yükleme
-      - name: Create zip file
-        run: |
-          cd js
-          zip -r output.zip .
-          mkdir -p artifacts
-          mv output.zip artifacts/
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact
-          path: artifacts/output.zip
+          npm run build  # Derleme işlemi ile dist klasörünü oluşturuyoruz
+          
+      # Zipleme işlemi kaldırıldı, sadece dist klasörünü oluşturuyoruz
