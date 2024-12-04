@@ -23,11 +23,11 @@ jobs:
 
     # Doğru dizine geçiş yapıyoruz, çünkü package.json burada
     - name: Change to js directory
-      run: cd js
+      run: cd js  # Bu adım js dizinine geçiş yapar
 
     # Bağımlılıkları yükleyin
     - name: Install dependencies
-      run: npm install  # js/package.json içinde bağımlılıkları yüklüyoruz
+      run: npm install  # Burada js/package.json dosyasındaki bağımlılıkları yüklüyoruz
 
     # Webpack derleme işlemi (geliştirme modunda tek seferlik derleme)
     - name: Run Webpack in Watch Mode
@@ -35,14 +35,8 @@ jobs:
         cd js
         npm run build  # Bu, üretim modunda derleme yapar
 
-    # Alternatif olarak webpack --watch komutunu çalıştırabilirsiniz
-    - name: Run Webpack Watch Mode (alternatif)
+    # (Opsiyonel) Webpack geliştirme modunda sürekli derleme
+    - name: Run Webpack Dev (alternatif)
       run: |
         cd js
-        webpack --watch  # Webpack'in yalnızca izleme modunda çalışmasını sağlar
-
-    # (Opsiyonel) Üretim modunda derleme
-    - name: Run Webpack Build (Production Mode)
-      run: |
-        cd js
-        npm run build  # Üretim modunda optimize edilmiş derleme
+        npm run dev  # Geliştirme modunda derleme yapılır
