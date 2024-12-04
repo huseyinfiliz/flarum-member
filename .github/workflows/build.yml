@@ -1,0 +1,35 @@
+name: Build and Transpile
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # js dizinine geçiş yapıyoruz, çünkü package.json orada
+      - name: Change to js directory
+        run: cd js
+
+      # Bağımlılıkları yükleyin
+      - name: Install dependencies
+        run: npm install  # js/package.json içinde bağımlılıkları yüklüyoruz
+
+      # Geliştirme modunda derleme (npm run dev)
+      - name: Run dev build
+        run: npm run dev  # js dizinindeki dev komutunu çalıştırıyoruz
+
+      # (Alternatif olarak) Üretim modunda derleme (npm run build)
+      - name: Run build for production
+        run: npm run build  # js dizinindeki build komutunu çalıştırıyoruz
