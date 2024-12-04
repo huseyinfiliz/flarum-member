@@ -16,4 +16,4 @@ export default class Member extends Component {
   view() {
     return;
   }
-}
+} 
