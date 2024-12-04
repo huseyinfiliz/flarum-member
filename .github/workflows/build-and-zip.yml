@@ -18,18 +18,17 @@ jobs:
         with:
           node-version: '16'
 
-      # Doğru dizine geçiş
-      - name: Change to js directory
-        run: cd js
+      # Doğru dizine geçiş ve npm komutlarının tek bir adımda yapılması
+      - name: Install dependencies and build
+        run: |
+          cd js
+          npm install
+          npm run build
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
+      # Zipleme işlemi ve artifact yükleme
       - name: Create zip file
         run: |
+          cd js
           zip -r output.zip .
           mkdir -p artifacts
           mv output.zip artifacts/
