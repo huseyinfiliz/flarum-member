@@ -21,16 +21,14 @@ jobs:
       with:
         node-version: '16'
 
-    # Doğru dizine geçiş yapıyoruz, çünkü package.json burada
-    - name: Change to js directory
-      run: cd js  # Bu adım js dizinine geçiş yapar
-
-    # Bağımlılıkları yükleyin
+    # Bağımlılıkları yüklemeden önce doğru dizine geçiş yapıyoruz
     - name: Install dependencies
-      run: npm install  # Burada js/package.json dosyasındaki bağımlılıkları yüklüyoruz
+      run: |
+        cd js
+        npm install  # Burada js/package.json dosyasındaki bağımlılıkları yüklüyoruz
 
     # Webpack derleme işlemi (geliştirme modunda tek seferlik derleme)
-    - name: Run Webpack in Watch Mode
+    - name: Run Webpack (Production Mode)
       run: |
         cd js
         npm run build  # Bu, üretim modunda derleme yapar
