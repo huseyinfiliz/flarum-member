@@ -18,15 +18,15 @@ jobs:
         with:
           node-version: '16'
 
-      # Doğru dizine geçiş
+      # Doğru dizine geçiş yapın (js klasörü)
       - name: Change to js directory
         run: cd js
 
-      # Yalnızca npm install yerine tüm bağımlılıkları yükle ve build komutunu çalıştır
+      # Bağımlılıkları yükleyin ve projeyi derleyin
       - name: Install dependencies and build
         run: |
           npm install
-          npm run build  # Burada build komutunun doğru çalıştığından emin olun
+          npm run build
 
       # Zipleme işlemi ve artifact yükleme
       - name: Create zip file
