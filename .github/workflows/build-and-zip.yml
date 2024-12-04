@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: '16'
 
+      # Doğru dizine geçiş
+      - name: Change to js directory
+        run: cd js
+
       - name: Install dependencies
         run: npm install
 
