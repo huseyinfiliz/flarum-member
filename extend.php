@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of zerosonesfun/flarum-member.
+ * This file is part of huseyinfiliz/flarum-member.
  *
- * Copyright (c) 2021 Billy Wilcosky.
+ * Copyright (c) 2024 Hüseyin Filiz.
  *
  * For the full copyright and license information, please view the LICENSE.md
  * file that was distributed with this source code.
  */
 
-namespace Zerosonesfun\Member;
+namespace huseyinfiliz\Member;
 
 use Flarum\Extend;
 use s9e\TextFormatter\Configurator;
