@@ -1,35 +1,54 @@
-name: Build and Transpile
+name: Flarum Extension Setup and Build
 
 on:
   push:
     branches:
+      - main  # Ana dalda yapılan push'lar tetikler
+  pull_request:
+    branches:
       - main
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        extensions: mbstring, xml, curl
 
-      # js dizinine geçiş yapıyoruz, çünkü package.json orada
-      - name: Change to js directory
-        run: cd js
+    - name: Install Composer dependencies
+      run: |
+        curl -sS https://getcomposer.org/installer | php
+        php composer.phar install
 
-      # Bağımlılıkları yükleyin
-      - name: Install dependencies
-        run: npm install  # js/package.json içinde bağımlılıkları yüklüyoruz
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      # Geliştirme modunda derleme (npm run dev)
-      - name: Run dev build
-        run: npm run dev  # js dizinindeki dev komutunu çalıştırıyoruz
+    - name: Install Node.js dependencies
+      run: |
+        cd js
+        npm install
 
-      # (Alternatif olarak) Üretim modunda derleme (npm run build)
-      - name: Run build for production
-        run: npm run build  # js dizinindeki build komutunu çalıştırıyoruz
+    - name: Run Webpack (development mode)
+      run: |
+        cd js
+        npm run dev  # Geliştirme modunda Webpack'i çalıştırır
+
+    - name: Run Webpack (production build)
+      run: |
+        cd js
+        npm run build  # Üretim modunda derleme yapar
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: flarum-extension
+        path: js/dist/forum.js  # Oluşturulan build dosyasını yükler
