@@ -1,54 +1,48 @@
-name: Flarum Extension Setup and Build
+name: Build and Transpile
 
 on:
   push:
     branches:
-      - main  # Ana dalda yapılan push'lar tetikler
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'
-        extensions: mbstring, xml, curl
-
-    - name: Install Composer dependencies
-      run: |
-        curl -sS https://getcomposer.org/installer | php
-        php composer.phar install
-
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    - name: Install Node.js dependencies
+    # Doğru dizine geçiş yapıyoruz, çünkü package.json burada
+    - name: Change to js directory
+      run: cd js
+
+    # Bağımlılıkları yükleyin
+    - name: Install dependencies
+      run: npm install  # js/package.json içinde bağımlılıkları yüklüyoruz
+
+    # Webpack derleme işlemi (geliştirme modunda tek seferlik derleme)
+    - name: Run Webpack in Watch Mode
       run: |
         cd js
-        npm install
+        npm run build  # Bu, üretim modunda derleme yapar
 
-    - name: Run Webpack (development mode)
+    # Alternatif olarak webpack --watch komutunu çalıştırabilirsiniz
+    - name: Run Webpack Watch Mode (alternatif)
       run: |
         cd js
-        npm run dev  # Geliştirme modunda Webpack'i çalıştırır
+        webpack --watch  # Webpack'in yalnızca izleme modunda çalışmasını sağlar
 
-    - name: Run Webpack (production build)
+    # (Opsiyonel) Üretim modunda derleme
+    - name: Run Webpack Build (Production Mode)
       run: |
         cd js
-        npm run build  # Üretim modunda derleme yapar
-
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: flarum-extension
-        path: js/dist/forum.js  # Oluşturulan build dosyasını yükler
+        npm run build  # Üretim modunda optimize edilmiş derleme
