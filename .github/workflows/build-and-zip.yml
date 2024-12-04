@@ -18,12 +18,12 @@ jobs:
         with:
           node-version: '16'
 
-      # Doğru dizine geçiş yapın (js klasörü)
+      # js dizinine geçiş yapıyoruz, çünkü package.json orada
+      - name: Change to js directory
+        run: cd js
 
       # Bağımlılıkları yükleyin ve projeyi derleyin
       - name: Install dependencies and build
         run: |
-          npm install
-          npm run build  # Derleme işlemi ile dist klasörünü oluşturuyoruz
-          
-      # Zipleme işlemi kaldırıldı, sadece dist klasörünü oluşturuyoruz
+          npm install  # js/package.json içinde bağımlılıkları yüklüyoruz
+          npm run build  # js dizinindeki build komutunu çalıştırıyoruz
