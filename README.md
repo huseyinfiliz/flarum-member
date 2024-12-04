@@ -11,15 +11,15 @@ Now includes two BBCodes:
 ### Installation
 
 ```sh
-composer require zerosonesfun/flarum-member
+composer require huseyinfiliz/flarum-member
 ```
 
 ### Updating
 
 ```sh
-composer update zerosonesfun/flarum-member
+composer update huseyinfiliz/flarum-member
 ```
-(To remove simply run `composer remove zerosonesfun/flarum-member`)
+(To remove simply run `composer remove huseyinfiliz/flarum-member`)
 
 ### Links
 
