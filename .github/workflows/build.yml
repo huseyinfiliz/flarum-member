@@ -1,36 +1,52 @@
-name: Flarum Frontend Build
+name: Build and Deploy Flarum Extension
 
 on:
   push:
     branches:
-      - main  # Ana dal adını güncelleyin
+      - main
   pull_request:
     branches:
-      - main  # Ana dal adını güncelleyin
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Kodu Çek
+      # 1. Checkout the repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Node.js'i Kur
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'  # Kullanmak istediğiniz Node.js sürümü
+          node-version: '16' # Flarum genellikle Node.js 16 ile uyumludur.
 
-      - name: Bağımlılıkları Yükle
+      # 3. Install dependencies using npm
+      - name: Install dependencies
         run: npm install
-        working-directory: ./js  # Projenize uygun şekilde dizin
 
-      - name: Üretim Modunda Derleme
+      # 4. Run the build process (production build)
+      - name: Build production files
         run: npm run build
-        working-directory: ./js  # Projenize uygun şekilde dizin
 
-      - name: Derlenmiş Dosyaları Yükle
-        uses: actions/upload-artifact@v3
+      # 5. Upload build artifacts for later use (optional)
+      - name: Upload build output
+        uses: actions/upload-artifact@v2
         with:
           name: build-output
-          path: ./js/dist  # Derlenmiş dosyaların bulunduğu dizin
+          path: |
+            js/dist/forum.js
+            js/dist/forum.js.map
+            # Add any other build output files if needed
+
+      # 6. Commit and push the build files (optional step, if you want to push the build files)
+      - name: Commit dist files
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add js/dist/*
+          git commit -m "Update dist files"
+          git push origin main
+        if: success() && github.event_name == 'push'
