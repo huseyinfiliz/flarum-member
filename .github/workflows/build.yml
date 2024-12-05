@@ -20,16 +20,20 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@organizationName'
 
-      # Change directory to /js
+      # Change directory to /js for all subsequent steps
       - name: Change to js directory
         run: cd js
 
       # Install dependencies
       - name: Install dependencies
-        run: yarn
+        run: |
+          cd js
+          yarn
 
       # Publish package
       - name: Publish package
-        run: yarn publish --access restricted
+        run: |
+          cd js
+          yarn publish --access restricted
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
