@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@huseyinfiliz'  # Organizasyon isminizi buraya ekleyin
+          scope: '@organizationName'  # Organizasyon isminizi buraya ekleyin
 
       # Install dependencies
       - name: Install dependencies
