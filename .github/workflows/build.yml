@@ -17,12 +17,7 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
-          # Defaults to the user or organization that owns the workflow file
-          scope: '@organizationName'
-
-      # Change directory to /js for all subsequent steps
-      - name: Change to js directory
-        run: cd js
+          scope: '@organizationName'  # Organizasyon isminizi buraya ekleyin
 
       # Install dependencies
       - name: Install dependencies
@@ -30,10 +25,10 @@ jobs:
           cd js
           yarn
 
-      # Publish package
+      # Publish package to GitHub Packages
       - name: Publish package
         run: |
           cd js
           yarn publish --access restricted
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}  # GitHub Secrets'den token'ı alıyoruz
