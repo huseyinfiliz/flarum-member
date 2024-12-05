@@ -1,9 +1,9 @@
-name: Build and Deploy Flarum Extension
+name: Build and Package Flarum Extension
 
 on:
   push:
     branches:
-      - main
+      - main  # Ana dalınıza göre bu kısmı güncelleyin
   pull_request:
     branches:
       - main
@@ -13,48 +13,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+    # 1. GitHub Actions tarafından çalışma alanının alınması
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # 2. Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          registry-url: 'https://registry.npmjs.org/'
+    # 2. Composer ve npm kurulumları
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'  # Gerekli PHP sürümünü belirtin
 
-      # 3. Set up npm token for authentication (using NODE_AUTH_TOKEN secret)
-      - name: Set up npm authentication
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+    - name: Install Composer dependencies
+      run: |
+        curl -sS https://getcomposer.org/installer | php
+        php composer.phar install --no-dev --optimize-autoloader
 
-      # 4. Install dependencies using npm (inside the js directory)
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./js # Package.json burada olduğu için js klasörüne geçiş yapılır
+    # 3. Node.js kurulumu ve npm bağımlılıkları
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # Node.js sürümünü belirleyin
+        cache: 'npm'
 
-      # 5. Run the build process (production build)
-      - name: Build production files
-        run: npm run build
-        working-directory: ./js # Burada da doğru dizinde build işlemi yapılır
+    - name: Install npm dependencies
+      run: npm install
 
-      # 6. Upload build artifacts
-      - name: Upload build output
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: |
-            js/dist/forum.js
-            js/dist/forum.js.map
+    # 4. Build işlemi
+    - name: Build the extension (production mode)
+      run: npm run build
 
-      # 7. Commit and push the build files (using GITHUB_TOKEN for authentication)
-      - name: Commit dist files
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add js/dist/*
-          git commit -m "Update dist files"
-          git push https://github.com/${{ github.repository }}.git HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: success() && github.event_name == 'push'
+    # 5. Uzantı dosyalarını hazırlama ve paketleme
+    - name: Package the extension
+      run: |
+        mkdir -p dist
+        cp -r * dist/  # Tüm dosyaları dist/ dizinine kopyalayın
+        # Gerekirse dist dizinindeki dosyaları zip veya tarball formatında paketleyin
+        tar -czf dist/flarum-member.tar.gz -C dist .
+
+    # 6. Dist dosyalarını GitHub'a yükleme
+    - name: Upload dist files as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: flarum-member-dist
+        path: dist/*
