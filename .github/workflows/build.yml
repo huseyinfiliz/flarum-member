@@ -3,10 +3,10 @@ name: Flarum Frontend Build
 on:
   push:
     branches:
-      - main  # Ana dalınızın adıyla değiştirin
+      - main  # Ana dal adını güncelleyin
   pull_request:
     branches:
-      - main  # Ana dalınızın adıyla değiştirin
+      - main  # Ana dal adını güncelleyin
 
 jobs:
   build:
@@ -19,18 +19,18 @@ jobs:
       - name: Node.js'i Kur
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'  # Kullanmak istediğiniz Node.js sürümünü belirtin
+          node-version: '16.x'  # Kullanmak istediğiniz Node.js sürümü
 
       - name: Bağımlılıkları Yükle
         run: npm install
-        working-directory: ./js  # JavaScript dosyalarınızın bulunduğu dizin
+        working-directory: ./js  # Projenize uygun şekilde dizin
 
       - name: Üretim Modunda Derleme
         run: npm run build
-        working-directory: ./js  # JavaScript dosyalarınızın bulunduğu dizin
+        working-directory: ./js  # Projenize uygun şekilde dizin
 
       - name: Derlenmiş Dosyaları Yükle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build-output
           path: ./js/dist  # Derlenmiş dosyaların bulunduğu dizin
