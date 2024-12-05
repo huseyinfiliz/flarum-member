@@ -25,4 +25,3 @@ composer update huseyinfiliz/flarum-member
 
 - [Packagist](https://packagist.org/packages/huseyinfiliz/flarum-member)
 - [Github](https://github.com/huseyinfiliz/flarum-member)
-- [Blog](https://www.huseyinfiliz.com.tr)
