@@ -28,12 +28,15 @@ jobs:
         curl -sS https://getcomposer.org/installer | php
         php composer.phar install --no-dev --optimize-autoloader
 
-    # 3. Node.js kurulumu ve npm bağımlılıkları
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'  # Node.js sürümünü belirleyin
-        cache: 'npm'
+        node-version: '16'
+        cache: 'yarn'
+
+    - name: Install Yarn dependencies
+      run: yarn install
+
 
     - name: Install npm dependencies
       run: npm install
