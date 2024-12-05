@@ -1,7 +1,7 @@
 {
   "name": "@huseyinfiliz/flarum-member",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "prettier": "@flarum/prettier-config",
   "dependencies": {
     "@flarum/prettier-config": "^1.0.0",
