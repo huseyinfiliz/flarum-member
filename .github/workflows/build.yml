@@ -18,7 +18,12 @@ jobs:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
 
-      # Change directory to js folder
+      # Set up .npmrc file to publish to NPM
+      - name: Set up .npmrc
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+
+      # Change to js directory
       - name: Change to js directory
         run: cd js
 
@@ -26,12 +31,12 @@ jobs:
       - name: Install dependencies and build 🔧
         run: |
           cd js
-          npm ci && npm run build
+          npm install && npm run build
 
-      # Publish package on NPM
-      - name: Publish package on NPM 📦
+      # Publish package on NPM 📦
+      - name: Publish package on NPM
         run: |
           cd js
-          npm publish
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}  # GitHub Secrets'den token'ı alıyoruz
