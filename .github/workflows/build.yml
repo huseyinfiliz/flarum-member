@@ -2,41 +2,36 @@ name: Publish to NPM
 
 on:
   release:
-    types: [created]
+    types: [created] # Yeni bir sürüm oluşturulduğunda çalışır.
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # Kodu GitHub deposundan çek
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Node.js
-      - name: Setup Node
+      # Node.js ortamını ayarla
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '16.x' # Node sürümü
           registry-url: 'https://registry.npmjs.org'
 
-      # Set up .npmrc to use the correct NPM token
-      - name: Set up .npmrc
+      # .npmrc dosyasını ayarla (GitHub Token kullanarak)
+      - name: Configure npm with GitHub token
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
 
-      # Change to js directory
-      - name: Change to js directory
-        run: cd js
-
-      # Install dependencies and build
-      - name: Install dependencies and build 🔧
+      # Bağımlılıkları yükle ve projeyi derle
+      - name: Install dependencies and build
+        working-directory: js
         run: |
-          cd js
-          npm install && npm run build
+          npm ci # Temiz yükleme
+          npm run build
 
-      # Publish package to NPM
-      - name: Publish package on NPM 📦
-        run: |
-          cd js
-          npm publish --access public  # Burada 'public' parametresi ile yayına alıyoruz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}  # NPM token'ını burada kullanıyoruz
+      # NPM'ye paketi yayınla
+      - name: Publish to NPM
+        working-directory: js
+        run: npm publish --access public
