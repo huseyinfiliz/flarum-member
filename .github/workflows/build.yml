@@ -18,7 +18,7 @@ jobs:
           node-version: '14.x'
           registry-url: 'https://registry.npmjs.org'
 
-      # Set up .npmrc file to publish to NPM
+      # Set up .npmrc to use the correct NPM token
       - name: Set up .npmrc
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
@@ -33,10 +33,10 @@ jobs:
           cd js
           npm install && npm run build
 
-      # Publish package on NPM 📦
-      - name: Publish package on NPM
+      # Publish package to NPM
+      - name: Publish package on NPM 📦
         run: |
           cd js
-          npm publish --access public
+          npm publish --access public  # Burada 'public' parametresi ile yayına alıyoruz
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}  # GitHub Secrets'den token'ı alıyoruz
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}  # NPM token'ını burada kullanıyoruz
