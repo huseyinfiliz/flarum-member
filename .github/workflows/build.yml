@@ -1,39 +1,36 @@
-name: Publish to NPM
+name: Flarum Frontend Build
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main  # Ana dalınızın adıyla değiştirin
+  pull_request:
+    branches:
+      - main  # Ana dalınızın adıyla değiştirin
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      # Kodu GitHub'dan çek
-      - name: Checkout code
+      - name: Kodu Çek
         uses: actions/checkout@v2
 
-      # Node.js ortamını ayarla
-      - name: Setup Node.js
+      - name: Node.js'i Kur
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '16.x'  # Kullanmak istediğiniz Node.js sürümünü belirtin
 
-      # .npmrc dosyasını ayarla
-      - name: Configure npm with token
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+      - name: Bağımlılıkları Yükle
+        run: npm install
+        working-directory: ./js  # JavaScript dosyalarınızın bulunduğu dizin
 
-      # Bağımlılıkları yükle ve projeyi derle
-      - name: Install dependencies
-        working-directory: js
-        run: |
-          npm install --no-package-lock
-          npm run build
+      - name: Üretim Modunda Derleme
+        run: npm run build
+        working-directory: ./js  # JavaScript dosyalarınızın bulunduğu dizin
 
-      # NPM'ye paketi yayınla
-      - name: Publish to NPM
-        working-directory: js
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      - name: Derlenmiş Dosyaları Yükle
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-output
+          path: ./js/dist  # Derlenmiş dosyaların bulunduğu dizin
