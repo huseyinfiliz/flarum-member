@@ -2,13 +2,13 @@ name: Publish to NPM
 
 on:
   release:
-    types: [created] # Yeni bir sürüm oluşturulduğunda çalışır.
+    types: [created]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Kodu GitHub deposundan çek
+      # Kodu GitHub'dan çek
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -16,22 +16,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x' # Node sürümü
+          node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
 
-      # .npmrc dosyasını ayarla (GitHub Token kullanarak)
-      - name: Configure npm with GitHub token
+      # .npmrc dosyasını ayarla
+      - name: Configure npm with token
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
 
       # Bağımlılıkları yükle ve projeyi derle
-      - name: Install dependencies and build
+      - name: Install dependencies
         working-directory: js
         run: |
-          npm ci # Temiz yükleme
+          npm install --no-package-lock
           npm run build
 
       # NPM'ye paketi yayınla
       - name: Publish to NPM
         working-directory: js
         run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
