@@ -22,18 +22,23 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+          registry-url: 'https://registry.npmjs.org/'
 
-      # 3. Install dependencies using npm (inside the js directory)
+      # 3. Set up npm token for authentication (using NODE_AUTH_TOKEN secret)
+      - name: Set up npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}" > ~/.npmrc
+
+      # 4. Install dependencies using npm (inside the js directory)
       - name: Install dependencies
         run: npm install
         working-directory: ./js # Package.json burada olduğu için js klasörüne geçiş yapılır
 
-      # 4. Run the build process (production build)
+      # 5. Run the build process (production build)
       - name: Build production files
         run: npm run build
         working-directory: ./js # Burada da doğru dizinde build işlemi yapılır
 
-      # 5. Upload build artifacts
+      # 6. Upload build artifacts
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
@@ -42,12 +47,14 @@ jobs:
             js/dist/forum.js
             js/dist/forum.js.map
 
-      # 6. Commit and push the build files (optional step)
+      # 7. Commit and push the build files (using GITHUB_TOKEN for authentication)
       - name: Commit dist files
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git add js/dist/*
           git commit -m "Update dist files"
-          git push origin main
+          git push https://github.com/${{ github.repository }}.git HEAD:main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: success() && github.event_name == 'push'
