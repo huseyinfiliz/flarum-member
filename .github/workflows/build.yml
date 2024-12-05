@@ -21,17 +21,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16' # Flarum genellikle Node.js 16 ile uyumludur.
+          node-version: '16'
 
-      # 3. Install dependencies using npm
+      # 3. Install dependencies using npm (inside the js directory)
       - name: Install dependencies
         run: npm install
+        working-directory: ./js # Package.json burada olduğu için js klasörüne geçiş yapılır
 
       # 4. Run the build process (production build)
       - name: Build production files
         run: npm run build
+        working-directory: ./js # Burada da doğru dizinde build işlemi yapılır
 
-      # 5. Upload build artifacts for later use (updated to use v4)
+      # 5. Upload build artifacts
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
@@ -39,9 +41,8 @@ jobs:
           path: |
             js/dist/forum.js
             js/dist/forum.js.map
-            # Add any other build output files if needed
 
-      # 6. Commit and push the build files (optional step, if you want to push the build files)
+      # 6. Commit and push the build files (optional step)
       - name: Commit dist files
         run: |
           git config --global user.name 'GitHub Actions'
