@@ -11,6 +11,8 @@ export default class Member extends Component {
     if (loggedin) {
       var body = document.body;
       body.classList.add('logged-in');
+    } else {
+      body.classList.add('logged-out');
     }
   }
   view() {

@@ -1,0 +1,40 @@
+name: Frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Depoyu klonlama
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Node.js kurma
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Projenizde kullanılan Node.js sürümüne göre ayarlayın
+
+      # 3. Bağımlılıkları yükleme
+      - name: Install dependencies
+        run: yarn install
+
+      # 4. Prettier kontrolü
+      - name: Run Prettier format check
+        run: yarn format-check
+
+      # 5. Webpack ile derleme
+      - name: Build frontend
+        run: yarn build
+
+      # 6. (Opsiyonel) Testleri çalıştırma
+      - name: Run tests
+        run: yarn test
