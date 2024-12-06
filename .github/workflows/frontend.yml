@@ -1,0 +1,15 @@
+name: Frontend
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  run:
+    uses: flarum/framework/.github/workflows/REUSABLE_frontend.yml@main
+    with:
+      enable_bundlewatch: false           # Bundlewatch'ı devre dışı bırak
+      enable_prettier: true               # Prettier ile kod formatlama
+      enable_typescript: false            # TypeScript kontrolleri devre dışı
+      frontend_directory: ./js            # JavaScript kodlarının bulunduğu dizin
+      backend_directory: .                # composer.json dosyasının bulunduğu dizin
+      js_package_manager: yarn            # Paket yöneticisi (npm yerine yarn kullanılır)
+      main_git_branch: main               # Ana dal (genellikle "main" veya "master")
