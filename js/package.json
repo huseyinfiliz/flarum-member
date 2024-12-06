@@ -12,13 +12,13 @@
   },
   "devDependencies": {
     "prettier": "^2.5.1",
-    "jest": "^29.7.2" // Jest eklendi
+    "jest": "^29.7.2"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "format": "prettier --write src",
     "format-check": "prettier --check src",
-    "test": "jest" // Jest ile test komutu eklendi
+    "test": "jest"
   }
 }
